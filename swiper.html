@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        .fl{  float: left;  }
+        .fr{  float: right;  }
+        .clearFix:after{ display: block; content: ''; clear: both; zoom:1;}
+        
+        .box{
+            width: 581px;
+            height: 341px;
+            overflow: hidden;
+            position: relative;
+            margin: 100px auto;
+        }
+        .box ul{
+            height: 341px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            overflow: hidden;
+        }
+        .box ul li{
+            width: 581px;
+            height: 341px;
+            cursor: pointer;
+        }
+        .box ul .one{
+            background: url("https://show-resource.mumov.com/yznt4.jpg") no-repeat;
+            background-size: 100% 100%;
+        }
+        .box ul .two{
+            background: url("https://show-resource.mumov.com/yznt3.jpg") no-repeat;
+            background-size: 100% 100%;
+        }
+        .box ul .three{
+            background: url("https://show-resource.mumov.com/yznt2.jpg") no-repeat;
+            background-size: 100% 100%;
+        }
+        .box ul .four{
+            background: url("https://show-resource.mumov.com/yznt1.jpg") no-repeat;
+            background-size: 100% 100%;
+        }
+        .box ul .five{
+            background: url("https://show-resource.mumov.com/yznt5.jpg") no-repeat;
+            background-size: 100% 100%;
+        }
+
+        .play_icon{
+            position: absolute;
+            left: 50%;
+            bottom: 24px;
+            width: 85px;
+            margin-left: -42px;
+        }
+        .play_icon li{
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #999;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        .play_icon li:hover{
+            background: #dedede;
+        }
+        .play_icon .active{
+            background: #ff486a;
+        }
+    </style>
+    <script src="jquery.js"></script>
+    <script>
+        $(function(){
+            var iNow=0;
+            var timer=null;
+            var oW = $('.box ul li:eq(0)').width();
+
+            for (var j = 0; j < $('.box ul li').length; j++) { //创建圆点
+                $('.play_icon').append('<li class="fl"></li>')
+            }
+            $('.play_icon li').first().addClass('active'); //给第一个圆点添加样式
+
+            var firstLi=$('.box ul li').first().clone(); //复制第一张图片
+            $('.box ul').append(firstLi).width($('.box ul li').length*($('.box ul li').width()));
+            //将第一张图片放到最后一张图片后，设置ul的宽度为图片张数*图片宽度
+
+
+            $('.play_icon li').click(function(){
+                var _index=$(this).index();
+                iNow=_index;
+                $('.box ul').stop().animate({left:-_index*oW},1000,'linear');
+                $('.play_icon li').eq(_index).addClass('active').siblings().removeClass('active');
+            });
+
+
+            //定时器自动播放
+            timer=setInterval(function(){
+                iNow++;
+                if (iNow==$('.box ul li').length) {
+                    iNow=1;
+                    $('.box ul').css({left:0});
+                };
+
+                $('.box ul').stop().animate({left:-iNow*oW},1000,'linear');
+                if (iNow==$('.box ul li').length-1) {
+                    $('.play_icon li').eq(0).addClass('active').siblings().removeClass('active');
+                }else{
+                    $('.play_icon li').eq(iNow).addClass('active').siblings().removeClass('active');
+                }
+            },3000);
+
+
+
+            //鼠标移入，暂停自动播放，移出，开始自动播放
+            $('.box').hover(function(){
+                clearInterval(timer);
+            },function(){
+                timer=setInterval(function(){
+                    iNow++;
+                    if (iNow==$('.box ul li').length) {
+                        iNow=1;
+                        $('.box ul').css({left:0});
+                    };
+
+                    $('.box ul').stop().animate({left:-iNow*oW},1000,'linear');
+                    if (iNow==$('.box ul li').length-1) {
+                        $('.play_icon li').eq(0).addClass('active').siblings().removeClass('active');
+                    }else{
+                        $('.play_icon li').eq(iNow).addClass('active').siblings().removeClass('active');
+                    }
+                },3000)
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="box">
+    <ul class="clearFix">
+        <li class="one fl"></li>
+        <li class="two fl"></li>
+        <li class="three fl"></li>
+        <li class="four fl"></li>
+        <li class="five fl"></li>
+    </ul>
+
+    <div class="play_icon clearFix">
+        <!--<li class="active fl"></li>
+        <li class="fl"></li>
+        <li class="fl"></li>
+        <li class="fl"></li>
+        <li class="fl"></li>-->
+    </div>
+</div>
+</body>
+</html>
